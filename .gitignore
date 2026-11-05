@@ -1,0 +1,39 @@
+# --- Python Virtual Environments ---
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Python Byte-compiled / Optimized / Decompiled files ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Django Specific ---
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static/
+
+# --- Environment Variables & Secrets ---
+.env
+.env.local
+.env.dev
+.env.prod
+secrets.json
+
+# --- IDEs and Text Editors ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# --- OS Generated Files ---
+.DS_Store
+Thumbs.db
