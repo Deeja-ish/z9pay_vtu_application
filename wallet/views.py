@@ -1,15 +1,33 @@
-from decimal import Decimal
-from django.contrib.auth import get_user_model
-from rest_framework import status, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+from decimal import Decimal
 
 from .models import Wallet, WalletLedger
+from .serializers import WalletSerializer, WalletLedgerSerializer
 from .paystack import PaystackClient
 from .services import WalletService
 
 User = get_user_model()
 
+
+class WalletDetailView(generics.RetrieveAPIView):
+    """GET /api/v1/wallet/ -> Returns current user's wallet balance and DVA bank details."""
+    serializer_class = WalletSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.wallet
+
+
+class WalletLedgerListView(generics.ListAPIView):
+    """GET /api/v1/wallet/ledger/ -> Returns the user's personal statement (credits/debits)."""
+    serializer_class = WalletLedgerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return WalletLedger.objects.filter(wallet=self.request.user.wallet)
 
 class PaystackWebhookView(APIView):
     """

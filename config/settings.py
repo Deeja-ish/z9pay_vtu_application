@@ -20,15 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xlt*&&jc*1(bgus8dz(04qbbf(!yzlv=k@mk2(=nubm$p6zxlm'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = config("SECRET_KEY", default='unsafe_secret_key')
+DEBUG = config("DEBUG", default=True, cast='bool')
 
 ALLOWED_HOSTS = []
-
-AUTH_USER_MODEL = "users.User"
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,12 +34,34 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    "rest_framework_simplejwt"
     "users",
     "transactions",
     "wallet",
     "catalog",
     "z9pay_integration"
 ]
+
+AUTH_USER_MODEL = "users.User"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES" : (
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
+    ),
+    "DEFAULT_PERMISSION_CLASSES" : (
+        "rest_framework.permissions.IsAuthenticated"
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME" : timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME" : timedelta(days=7),
+    "AUTH_HEADER_TYPES" : ("Bearer",),
+}
+
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY", default='sk_test_dummy_1234')
+PAYSTACK_PREFERRED_BANK = config("PAYSTACK_PREFERREF_BANK", default='test-bank')
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
