@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
-
+from decouple import config
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY", default='unsafe_secret_key')
-DEBUG = config("DEBUG", default=True, cast='bool')
+DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = []
 # Application definition
@@ -34,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
-    "rest_framework_simplejwt"
+    "rest_framework_simplejwt",
     "users",
     "transactions",
     "wallet",
@@ -45,12 +46,12 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "users.User"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES" : (
-        "rest_framework_simplejwt.authentication.JWTAuthentication"
-    ),
-    "DEFAULT_PERMISSION_CLASSES" : (
-        "rest_framework.permissions.IsAuthenticated"
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES" : [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES" : [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 SIMPLE_JWT = {
@@ -59,7 +60,7 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES" : ("Bearer",),
 }
 
-PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY", default='sk_test_dummy_1234')
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
 PAYSTACK_PREFERRED_BANK = config("PAYSTACK_PREFERREF_BANK", default='test-bank')
 
 

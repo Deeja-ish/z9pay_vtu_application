@@ -45,4 +45,9 @@ class PaystackClient:
             msg=payload_bytes,
             digestmod=hashlib.sha512,
         ).hexdigest()
+
+        print("DEBUG Key Used:", settings.PAYSTACK_SECRET_KEY)
+        print("DEBUG Expected Hash (Django):", computed_hash)
+        print("DEBUG Received Hash (Postman):", signature_header)
+        
         return hmac.compare_digest(computed_hash, signature_header)
