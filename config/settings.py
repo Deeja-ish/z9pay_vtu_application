@@ -150,3 +150,15 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Z9Pay Upstream API Configuration
+Z9PAY_BASE_URL = config("Z9PAY_BASE_URL", default="https://backend.z9pay.com.ng/api/v1/developer")
+Z9PAY_API_KEY = config("Z9PAY_API_KEY")
+# When True, simulates Z9Pay responses locally so you can test SUCCESS and FAILED flows in Postman!
+Z9PAY_MOCK_MODE = config("Z9PAY_MOCK_MODE", default=True, cast=bool)
+
+# Celery Configuration
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://localhost:6379/0")
+# Set to True locally so tasks execute immediately without needing a separate Redis/Celery terminal
+CELERY_TASK_ALWAYS_EAGER = config("CELERY_TASK_ALWAYS_EAGER", default=True, cast=bool)

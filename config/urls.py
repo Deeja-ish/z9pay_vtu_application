@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from transactions.views import PurchaseDataView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/auth/", include("users.urls")),
     path("api/v1/wallet/", include("wallet.urls")),
-    path("api/v1/catalog/", include("catalog.urls"))
+    path("api/v1/catalog/", include("catalog.urls")),
+    path("api/v1/purchase/data/", PurchaseDataView.as_view(), name="purchase-data"),
+    path("api/v1/transactions/", include("transactions.urls")),
 ]
