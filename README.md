@@ -446,38 +446,6 @@ Celery handles tasks that should not block HTTP request/response lifecycles:
 
 ---
 
-## Architecture & Financial Safety
-
-### Two-Phase Purchase & Automatic Refunds
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client
-    participant API as Django API (/purchase/data/)
-    participant DB as Wallet & Ledger (Postgres/SQLite)
-    participant Worker as Celery Worker
-    participant Z9Pay as Z9Pay Upstream API
-
-    Client->>API: POST /purchase/data/ (plan_id, phone, reference)
-    API->>DB: Lock wallet (select_for_update) & deduct balance
-    API->>DB: Insert WalletLedger [DEBIT, DATA_PURCHASE]
-    API->>DB: Insert DataTransaction [PENDING]
-    API->>Worker: Dispatch process_z9pay_data_purchase.delay()
-    API-->>Client: 201 Created (Status: PENDING)
-    
-    Worker->>Z9Pay: POST /purchase/ (plan_code, phone_number)
-    alt Upstream Success
-        Z9Pay-->>Worker: HTTP 200 (status: SUCCESS)
-        Worker->>DB: Update DataTransaction [SUCCESS]
-    else Upstream Failure
-        Z9Pay-->>Worker: HTTP 400/422 (status: FAILED)
-        Worker->>DB: Lock transaction & mark [REFUNDED]
-        Worker->>DB: Lock wallet & credit full amount
-        Worker->>DB: Insert WalletLedger [CREDIT, PURCHASE_REFUND]
-    end
-```
-
 ### Row-Level Locking & Idempotency
 
 - Every wallet mutation executes within an atomic database transaction using **`Wallet.objects.select_for_update()`**, preventing concurrent balance modification and race conditions.
