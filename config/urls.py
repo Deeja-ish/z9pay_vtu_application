@@ -17,8 +17,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from transactions.views import PurchaseDataView
+from django.http import JsonResponse
+
+
+def health_check(request):
+    return JsonResponse({
+        "status": "online",
+        "service": "Z9Pay VTU Backend API",
+        "version": "v1",
+        "endpoints": {
+            "admin": "/admin/",
+            "auth": "/api/v1/auth/",
+            "wallet": "/api/v1/wallet/",
+            "catalog": "/api/v1/catalog/",
+            "purchase": "/api/v1/purchase/data/",
+            "transactions": "/api/v1/transactions/"
+        }
+    })
 
 urlpatterns = [
+    path("", health_check, name="health-check"),
     path("admin/", admin.site.urls),
     path("api/v1/auth/", include("users.urls")),
     path("api/v1/wallet/", include("wallet.urls")),
