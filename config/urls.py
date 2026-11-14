@@ -27,7 +27,8 @@ def health_check(request):
         "version": "v1",
         "endpoints": {
             "admin": "/admin/",
-            "auth": "/api/v1/auth/",
+            "auth": "/api/v1/auth/register",
+            "auth" : "/api/v1/auth/login/"
             "wallet": "/api/v1/wallet/",
             "catalog": "/api/v1/catalog/",
             "purchase": "/api/v1/purchase/data/",
